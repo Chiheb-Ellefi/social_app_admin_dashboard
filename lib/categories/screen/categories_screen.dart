@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dashboard/categories/components/add_tag.dart';
 import 'package:dashboard/categories/components/delete_tag_dialog.dart';
 import 'package:dashboard/categories/components/edit_tag_dialog.dart';
 import 'package:dashboard/categories/components/tags_list_tile.dart';
@@ -39,7 +40,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           elevation: 0,
           backgroundColor: Colors.grey.shade900,
           title: Text(
-            'Dashboard',
+            'Categories',
             style: TextStyle(fontSize: 25, color: Colors.grey.shade100),
           ),
           actions: const [
@@ -47,51 +48,79 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 50),
-          child: FutureBuilder(
-              future: getSnapshot(),
-              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Show a loading indicator while fetching the tags
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Text('Error loading tags');
-                } else {
-                  return ListView.separated(
-                      separatorBuilder: (context, index) => const Divider(
-                            color: Colors.grey,
-                          ),
-                      itemCount: myTags.length,
-                      itemBuilder: (context, index) {
-                        int numberOfTopics = topicsPerCategory![myTags[index]]!;
-                        return TagsListTile(
-                            delete: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => DeleteTagDialog(
-                                        myTags: myTags,
-                                        index: index,
-                                        setState: () {
-                                          setState(() {});
-                                        },
-                                      ));
-                            },
-                            edit: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => EditTag(
-                                        myTags: myTags,
-                                        index: index,
-                                        setState: () {
-                                          setState(() {});
-                                        },
-                                      ));
-                            },
-                            num: numberOfTopics,
-                            text: myTags[index]);
-                      });
-                }
-              }),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  child: const Text('Add Category'),
+                  onPressed: () {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) => AddTag(
+                              myTags: myTags,
+                              seState: () {
+                                setState(() {});
+                              },
+                            ));
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              Expanded(
+                child: FutureBuilder(
+                    future: getSnapshot(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<void> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Show a loading indicator while fetching the tags
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return const Text('Error loading tags');
+                      } else {
+                        return ListView.separated(
+                            separatorBuilder: (context, index) => const Divider(
+                                  color: Colors.grey,
+                                ),
+                            itemCount: myTags.length,
+                            itemBuilder: (context, index) {
+                              int numberOfTopics =
+                                  topicsPerCategory![myTags[index]]!;
+                              return TagsListTile(
+                                  delete: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => DeleteTagDialog(
+                                              myTags: myTags,
+                                              index: index,
+                                              setState: () {
+                                                setState(() {});
+                                              },
+                                            ));
+                                  },
+                                  edit: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => EditTag(
+                                              myTags: myTags,
+                                              index: index,
+                                              setState: () {
+                                                setState(() {});
+                                              },
+                                            ));
+                                  },
+                                  num: numberOfTopics,
+                                  text: myTags[index]);
+                            });
+                      }
+                    }),
+              ),
+            ],
+          ),
         ));
   }
 }

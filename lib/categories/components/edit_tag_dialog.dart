@@ -33,7 +33,7 @@ class _EditTagState extends State<EditTag> {
     return AlertDialog(
       content: TextField(
         controller: _controller,
-        decoration: const InputDecoration(label: Text('Edit tag')),
+        decoration: const InputDecoration(label: Text('Edit category')),
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
