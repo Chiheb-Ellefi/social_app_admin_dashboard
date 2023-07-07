@@ -57,7 +57,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     showDialog(
                       barrierDismissible: false,
                       context: context,
-                      builder: (context) => AddAdmin(),
+                      builder: (context) => const AddAdmin(),
                       // Display the AddAdmin widget
                     );
                   },

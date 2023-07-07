@@ -12,18 +12,41 @@ class TopicsPerCategory extends StatefulWidget {
 class _TopicsPerCategoryState extends State<TopicsPerCategory> {
   GetInfo info = GetInfo();
   Map<String, int>? topicsPerCategory;
+  List<MyData>? myDataList = [];
+
   getTopicsPerCategory() async {
     topicsPerCategory = await info.getCategoryTopics();
+
     if (mounted) {
       setState(() {
-        myDataList = topicsPerCategory?.entries
-            .map((entry) => MyData(entry.value, entry.key))
+        // Sort the categories based on the topic count in descending order
+        final sortedEntries = topicsPerCategory?.entries.toList();
+        sortedEntries?.sort((a, b) => b.value.compareTo(a.value));
+
+        // Select the top 5 categories
+        final topCategories = sortedEntries?.take(5).toList();
+
+        // Calculate the sum of the remaining categories
+        int sumOfOthers = 0;
+        if (sortedEntries != null && sortedEntries.length > 5) {
+          for (var i = 5; i < sortedEntries.length; i++) {
+            sumOfOthers += sortedEntries[i].value;
+          }
+        }
+
+        // Create data points for the top 5 categories
+        myDataList = topCategories
+            ?.map((entry) => MyData(entry.value, entry.key))
             .toList();
+
+        // Add the "Others" category
+        if (sumOfOthers > 0) {
+          myDataList?.add(MyData(sumOfOthers, 'Others'));
+        }
       });
     }
   }
 
-  List<MyData>? myDataList = [];
   @override
   void initState() {
     super.initState();

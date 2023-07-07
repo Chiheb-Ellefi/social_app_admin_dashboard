@@ -3,6 +3,7 @@ import 'package:dashboard/categories/screen/categories_screen.dart';
 import 'package:dashboard/dashboard/screen/dashboard.dart';
 import 'package:dashboard/data/models/user_model.dart';
 import 'package:dashboard/home_page/web_services/get_admin.dart';
+import 'package:dashboard/reports/screen/reports_screen.dart';
 import 'package:dashboard/terms_of_use/screen/terms_of_use_screen.dart';
 import 'package:dashboard/users/screen/users_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -137,6 +138,8 @@ class _HomePageState extends State<HomePage> {
                     return const UsersScreen();
                   case 2:
                     return const CategoriesScreen();
+                  case 3:
+                    return const ReportsScreen();
                   case 4:
                     return const TermsOfUse();
                   default:
