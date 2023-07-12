@@ -9,7 +9,7 @@ import 'package:dashboard/reports/web_services/get_reports.dart';
 import 'package:flutter/material.dart';
 
 class ReportsScreen extends StatefulWidget {
-  const ReportsScreen({super.key});
+  const ReportsScreen({Key? key}) : super(key: key);
 
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
@@ -18,22 +18,23 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> {
   GetReports getReports = GetReports();
   late Stream<QuerySnapshot<ReportModel>> stream;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     stream = getReports.getQuery().snapshots();
   }
 
   deleteDialog({uid}) {
     showDialog(
-        context: context,
-        builder: (context) => DeleteDialog(
-              delete: () {
-                getReports.deleteReports(uid);
-                getReports.deleteTopic(uid);
-              },
-            ));
+      context: context,
+      builder: (context) => DeleteDialog(
+        delete: () {
+          getReports.deleteReports(uid);
+          getReports.deleteTopic(uid);
+        },
+      ),
+    );
   }
 
   @override
@@ -72,54 +73,55 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   final documents = snapshot.data?.docs ?? [];
                   return Center(
                     child: SizedBox(
-                        width: (MediaQuery.of(context).size.width / 10) * 8,
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) => const Divider(
-                            color: Colors.grey,
-                          ),
-                          itemCount: documents.length,
-                          itemBuilder: (context, index) {
-                            final report = documents[index].data();
-                            final List? reasons = report.reasons;
-                            final uid = report.reported;
-                            return Expanded(
-                              child: FutureBuilder<TopicModel?>(
-                                  future: getReports.getInfo(uid: uid),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else {
-                                      final topic = snapshot.data;
-                                      return ReportTile(
-                                          title: topic!.title,
-                                          author: topic.author,
-                                          delete: () {
-                                            deleteDialog(uid: uid);
-                                          },
-                                          read: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    TopicAlert(
-                                                      title: topic.title,
-                                                      description:
-                                                          topic.description,
-                                                      author: topic.author,
-                                                      reasons: reasons,
-                                                      delete: () {
-                                                        deleteDialog(uid: uid);
-                                                      },
-                                                    ));
-                                          });
-                                    }
-                                  }),
-                            );
-                          },
-                        )),
+                      width: (MediaQuery.of(context).size.width / 10) * 8,
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) => const Divider(
+                          color: Colors.grey,
+                        ),
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          final report = documents[index].data();
+                          final List? reasons = report.reasons;
+                          final uid = report.reported;
+                          return FutureBuilder<TopicModel?>(
+                            future: getReports.getInfo(uid: uid),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                final topic = snapshot.data;
+                                return ReportTile(
+                                  title: topic!.title,
+                                  author: topic.author,
+                                  delete: () {
+                                    deleteDialog(uid: uid);
+                                  },
+                                  read: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => TopicAlert(
+                                        title: topic.title,
+                                        description: topic.description,
+                                        author: topic.author,
+                                        reasons: reasons,
+                                        delete: () {
+                                          deleteDialog(uid: uid);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   );
                 }
               },

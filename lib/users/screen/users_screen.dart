@@ -97,7 +97,7 @@ class _UsersScreenState extends State<UsersScreen> {
                             final email = userModel.email;
                             final image = userModel.profilePicture;
                             final isAdmin = userModel.isAdmin;
-
+                            final userUid = userModel.uid;
                             return FutureBuilder<int>(
                               future: getReports(uid: userModel.uid),
                               builder: (context, snapshot) {
@@ -111,6 +111,10 @@ class _UsersScreenState extends State<UsersScreen> {
                                   final reports = snapshot.data ?? 0;
 
                                   return UserTile(
+                                    onBanPressed: () {
+                                      setState(() {});
+                                    },
+                                    userUid: userUid!,
                                     userName: username!,
                                     image: image!,
                                     email: email!,
