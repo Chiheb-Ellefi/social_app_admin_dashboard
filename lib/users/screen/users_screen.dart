@@ -155,7 +155,9 @@ class _UsersScreenState extends State<UsersScreen> {
                                                       ElevatedButton(
                                                           onPressed: () {
                                                             getUsers.deleteUser(
-                                                                userModel.uid!);
+                                                                userModel.uid!,
+                                                                userModel
+                                                                    .profilePicture!);
                                                             Navigator.pop(
                                                                 context);
                                                           },
