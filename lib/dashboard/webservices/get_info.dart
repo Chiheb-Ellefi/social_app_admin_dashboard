@@ -15,10 +15,12 @@ class GetInfo {
     registredCount = registredSnapshot.docs.length;
 
     final anonymousSnapshot = await FirebaseFirestore.instance
-        .collection(usersCollection)
-        .where('isAnonymous', isEqualTo: true)
+        .collection('anonymousUsers')
+        .doc('users')
         .get();
-    anonymousCount = anonymousSnapshot.docs.length;
+    Map data = anonymousSnapshot.data() as Map;
+    List users = data['anonUsers'];
+    anonymousCount = users.length;
 
     final topicsSnapshot =
         await FirebaseFirestore.instance.collection(topicsCollection).get();

@@ -14,13 +14,13 @@ void main() async {
 
   await Firebase.initializeApp(options: firebaseOptions);
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
